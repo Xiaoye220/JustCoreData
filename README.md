@@ -26,7 +26,7 @@ extension Person: ManagedObjectType {
 }
 ```
 
-### 3.给需要需要提供 Core Data 各种操作的类 实现 CoreDataOperationsType 协议
+### 3.给需要提供 Core Data 各种操作的类 实现 CoreDataOperationsType 协议
 
 CoreDataOperationsType 协议实现了 Core Data 的增删改查的基本功能。
 此处还是以类 Person 做为实现的类
