@@ -2,14 +2,14 @@
 
 ## Usage
 
-### Data Model
+### 1.Data Model
 
 先看例子中的 Data Model
 
 ![DataModel](https://github.com/Xiaoye220/CoreDataExtensions/blob/master/ScreenShot/DataModel.png)
 
 
-### 实体实现 ManagedObjectType 协议
+### 2.实体实现 ManagedObjectType 协议
 
 实体需要实现 ManagedObjectType 协议，协议实现了根据实体名和 NSSortDescriptor 提供多个 NSFetchRequest 模板，并提供了根据 Dictionary 给实体赋值的功能，此处以实体 Person 做例子。
 
@@ -26,7 +26,7 @@ extension Person: ManagedObjectType {
 }
 ```
 
-### 给需要需要提供 Core Data 各种操作的类 实现 CoreDataOperationsType 协议
+### 3.给需要需要提供 Core Data 各种操作的类 实现 CoreDataOperationsType 协议
 
 CoreDataOperationsType 协议实现了 Core Data 的增删改查的基本功能。
 此处还是以类 Person 做为实现的类
@@ -54,7 +54,7 @@ class CoreDataAPI<E: NSManagedObject>: CoreDataOperationsType where E: ManagedOb
 }
 ```
 
-### 通过 CoreDataOperationsType 协议中的方法操作数据库
+### 4.通过 CoreDataOperationsType 协议中的方法操作数据库
 以 Person 实现 CoreDataOperationsType 协议为例
 #### 数据源
 自定义 dict 用来存储需要进行操作的数据。
@@ -146,5 +146,48 @@ public static func find(by pageNum: Int, pageSize: Int) -> [ManageObject]
 
 除上面的功能外还有一些功能，可以查看协议 CoreDataOperationsType
 
+### 5.NSFetchedResultsController
 
+除了以上功能，对 NSFetchedResultsController 也做了一些封装
 
+#### 使用
+``` Swift 
+class NSFetchedResultsViewController: UITableViewController {
+
+    var fetchedResultsManager: FetchedResultsManager<Person>!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        // 初始化 FetchedResultsManager，下面就可以直接通过 fetchedResultsManager 实现 tableView 的数据源
+        // 任何对 Core Data 的操作可以直接反应在 tableView 上
+        fetchedResultsManager = FetchedResultsManager.init(fetchRequest: Person.sortedFetchRequest, contextType: .mainContext, tableView: tableView, sectionName: nil)
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+
+    // MARK: - Table view data source
+
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        return fetchedResultsManager.numberOfSections()
+    }
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return fetchedResultsManager.numberOfItemsInSection(section)
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+        if cell == nil {
+            cell = UITableViewCell.init(style: .default, reuseIdentifier: "cell")
+        }
+        let obj = fetchedResultsManager.objectAtIndexPath(indexPath)
+        cell?.textLabel?.text = "id: " + String(obj.id) + "  name: " + obj.name!
+        return cell!
+    }
+    
+}
+```
