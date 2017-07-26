@@ -41,7 +41,12 @@ extension Person: CoreDataOperationsType {
     public typealias ManageObject = Person
 }
 ```
-或者可以单独实现一个类用于进行 Core Data 的操作，像一下这样子实现
+接下来对 CoreData 的操作 Person 就可以通过下面这种方式实现
+``` Swift
+Person.findAll()
+```
+
+或者可以单独实现一个类用于进行 Core Data 的操作，像以下这样子实现
 ```swift
 class CoreDataAPI<E: NSManagedObject>: CoreDataOperationsType where E: ManagedObjectType  {
     
@@ -53,6 +58,11 @@ class CoreDataAPI<E: NSManagedObject>: CoreDataOperationsType where E: ManagedOb
     
 }
 ```
+那么对 CoreData 的操作就该这么实现
+```swift
+CoreDataAPI<Person>.findAll()
+```
+
 
 ### 4.通过 CoreDataOperationsType 协议中的方法操作数据库
 以 Person 实现 CoreDataOperationsType 协议为例
