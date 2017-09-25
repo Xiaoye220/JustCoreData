@@ -25,6 +25,7 @@ public protocol CoreDataOperationsType: class {
 
 extension CoreDataOperationsType where ManageObject: NSManagedObject {
     
+    
     fileprivate static func getContext(by contextType: ContextType) -> NSManagedObjectContext {
         switch contextType {
         case .mainContext:
@@ -34,6 +35,14 @@ extension CoreDataOperationsType where ManageObject: NSManagedObject {
         }
     }
     
+    
+    /// 保存数据
+    ///
+    /// - Parameters:
+    ///   - contextType: 并发方式
+    ///   - dataCount: 需要保存数据的条数
+    ///   - saveBatchSize: 多少条数据保存一次
+    ///   - configure: 数据赋值
     public static func save(by contextType: ContextType, dataCount: Int, saveBatchSize: Int = 0,
                             completion: @escaping (_ isSuccess: Bool) -> Void = { _ in },
                             configure: @escaping (_ index: Int, _ entity: ManageObject) -> Void) {
@@ -54,7 +63,9 @@ extension CoreDataOperationsType where ManageObject: NSManagedObject {
                 }
             }
             if context.saveOrRollback() {
-                completion(true)
+                DispatchQueue.main.async {
+                    completion(true)
+                }
             } else {
                 completion(false)
             }
@@ -152,10 +163,6 @@ extension CoreDataOperationsType where ManageObject: NSManagedObject {
     
     
     /// 根据谓词查找指定数据进行更新
-    ///
-    /// - Parameters:
-    ///   - dictionary: 更新后的数据
-    ///   - type: 并发方式
     public static func update(by contextType: ContextType, predicate: NSPredicate,
                               completion: @escaping (_ isSuccess: Bool) -> Void = { _ in },
                               configure: @escaping (ManageObject) -> Void) {
@@ -178,6 +185,8 @@ extension CoreDataOperationsType where ManageObject: NSManagedObject {
         }
     }
     
+    
+    /// 直接根据 manageObjects 更新
     public static func update(by contextType: ContextType, manageObjects: [ManageObject],
                               completion: @escaping (_ isSuccess: Bool) -> Void = { _ in },
                               configure: @escaping (ManageObject) -> Void) {
@@ -199,7 +208,7 @@ extension CoreDataOperationsType where ManageObject: NSManagedObject {
     /// 根据谓词查找指定数据进行删除
     ///
     /// - Parameters:
-    ///   - type: 并发方式
+    ///   - contextType: 并发方式
     public static func delete(by contextType: ContextType, predicate: NSPredicate, completion: @escaping (_ isSuccess: Bool) -> Void = { _ in }) {
         let request = ManageObject.sortedFetchRequestWithPredicate(predicate)
         request.returnsObjectsAsFaults = true
@@ -230,7 +239,7 @@ extension CoreDataOperationsType where ManageObject: NSManagedObject {
     /// 删除所有实体
     ///
     /// - Parameters:
-    ///   - type: 并发方式
+    ///   - contextType: 并发方式
     public static func deleteAll(by contextType: ContextType, completion: @escaping (_ isSuccess: Bool) -> Void = { _ in }) {
         let request = ManageObject.defaultFetchRequest
         request.returnsObjectsAsFaults = true

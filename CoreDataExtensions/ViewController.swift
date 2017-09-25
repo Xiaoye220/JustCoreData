@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     
     var dicts: [[String: Any]] {
         var dicts: [[String: Any]] = []
-        for i in 1 ... dataCount {
+        for i in 1 ... 10 {
             let dict =  ["id": i,
                          "name": "Li lei",
                          "age": 25,
@@ -48,6 +48,7 @@ class ViewController: UIViewController {
         }) { (index, person) in
             person.updateFromDictionary(dict: self.dicts[index])
         }
+        
     }
     
     @IBAction func saveInPrivateContext(_ sender: Any) {

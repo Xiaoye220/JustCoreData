@@ -126,7 +126,8 @@ extension ManagedObjectType where Self: NSManagedObject {
             }
         }
         let index = predicateFormat.index(predicateFormat.endIndex, offsetBy: -5)
-        predicateFormat = predicateFormat.substring(to: index)
+        predicateFormat = String(predicateFormat[..<index])
+        //predicateFormat = predicateFormat.substring(to: index)
         
         let predicate = NSPredicate(format: predicateFormat, argumentArray: args)
         
