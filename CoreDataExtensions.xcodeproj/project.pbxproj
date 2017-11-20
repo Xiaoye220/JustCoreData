@@ -12,20 +12,24 @@
 		2F0DF9401F15B0A9005EAE12 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F0DF93E1F15B0A9005EAE12 /* Main.storyboard */; };
 		2F0DF9421F15B0A9005EAE12 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2F0DF9411F15B0A9005EAE12 /* Assets.xcassets */; };
 		2F0DF9451F15B0A9005EAE12 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2F0DF9431F15B0A9005EAE12 /* LaunchScreen.storyboard */; };
-		2F0DF9621F15B144005EAE12 /* CoreDataAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0DF95D1F15B144005EAE12 /* CoreDataAPI.swift */; };
-		2F0DF9631F15B144005EAE12 /* Parent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0DF95E1F15B144005EAE12 /* Parent.swift */; };
+		2F0DF9631F15B144005EAE12 /* GrandFather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0DF95E1F15B144005EAE12 /* GrandFather.swift */; };
 		2F0DF9641F15B144005EAE12 /* Children.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0DF95F1F15B144005EAE12 /* Children.swift */; };
-		2F0DF9651F15B144005EAE12 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0DF9601F15B144005EAE12 /* Person.swift */; };
+		2F0DF9651F15B144005EAE12 /* Father.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0DF9601F15B144005EAE12 /* Father.swift */; };
 		2F0DF9671F15B155005EAE12 /* FPSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0DF9661F15B155005EAE12 /* FPSView.swift */; };
 		2F252F881F15CDE900C5B740 /* Person.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2F252F861F15CDE900C5B740 /* Person.xcdatamodeld */; };
 		2F252FD21F174ED500C5B740 /* NSFetchedResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F252FD11F174ED500C5B740 /* NSFetchedResultsViewController.swift */; };
 		2F252FE81F17671F00C5B740 /* Collection+CoreDataExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F252FE11F17671F00C5B740 /* Collection+CoreDataExtensions.swift */; };
-		2F252FE91F17671F00C5B740 /* CoreDataOperationsType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F252FE21F17671F00C5B740 /* CoreDataOperationsType.swift */; };
 		2F252FEA1F17671F00C5B740 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F252FE31F17671F00C5B740 /* CoreDataStack.swift */; };
 		2F252FEB1F17671F00C5B740 /* FetchedResultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F252FE41F17671F00C5B740 /* FetchedResultsManager.swift */; };
 		2F252FEC1F17671F00C5B740 /* ManagedObjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F252FE51F17671F00C5B740 /* ManagedObjectType.swift */; };
 		2F252FED1F17671F00C5B740 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F252FE61F17671F00C5B740 /* NSManagedObjectContext+Extensions.swift */; };
-		2F252FEE1F17671F00C5B740 /* NSManageObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F252FE71F17671F00C5B740 /* NSManageObject+Extensions.swift */; };
+		2F84CD3E1FBAC48E0062BF8B /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F84CD3D1FBAC48E0062BF8B /* CoreData.swift */; };
+		2F84CD401FBAC5C40062BF8B /* CoreDataCustomEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F84CD3F1FBAC5C40062BF8B /* CoreDataCustomEnum.swift */; };
+		2F84CD431FBADE530062BF8B /* CoreDataConcurrencyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F84CD421FBADE530062BF8B /* CoreDataConcurrencyType.swift */; };
+		2F84CD451FBAE3050062BF8B /* CoreDataFetchRequestType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F84CD441FBAE3050062BF8B /* CoreDataFetchRequestType.swift */; };
+		2F84CD471FBBF0B40062BF8B /* NSFetchRequest+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F84CD461FBBF0B40062BF8B /* NSFetchRequest+Extension.swift */; };
+		2F84CD491FBBF3020062BF8B /* CoreDataType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F84CD481FBBF3020062BF8B /* CoreDataType.swift */; };
+		2F84CD4C1FC28D320062BF8B /* NSManagedObject+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F84CD4B1FC28D320062BF8B /* NSManagedObject+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,20 +40,24 @@
 		2F0DF9411F15B0A9005EAE12 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2F0DF9441F15B0A9005EAE12 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2F0DF9461F15B0A9005EAE12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2F0DF95D1F15B144005EAE12 /* CoreDataAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataAPI.swift; sourceTree = "<group>"; };
-		2F0DF95E1F15B144005EAE12 /* Parent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Parent.swift; sourceTree = "<group>"; };
+		2F0DF95E1F15B144005EAE12 /* GrandFather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GrandFather.swift; sourceTree = "<group>"; };
 		2F0DF95F1F15B144005EAE12 /* Children.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Children.swift; sourceTree = "<group>"; };
-		2F0DF9601F15B144005EAE12 /* Person.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
+		2F0DF9601F15B144005EAE12 /* Father.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Father.swift; sourceTree = "<group>"; };
 		2F0DF9661F15B155005EAE12 /* FPSView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FPSView.swift; sourceTree = "<group>"; };
 		2F252F871F15CDE900C5B740 /* Person.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Person.xcdatamodel; sourceTree = "<group>"; };
 		2F252FD11F174ED500C5B740 /* NSFetchedResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSFetchedResultsViewController.swift; sourceTree = "<group>"; };
 		2F252FE11F17671F00C5B740 /* Collection+CoreDataExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+CoreDataExtensions.swift"; sourceTree = "<group>"; };
-		2F252FE21F17671F00C5B740 /* CoreDataOperationsType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataOperationsType.swift; sourceTree = "<group>"; };
 		2F252FE31F17671F00C5B740 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		2F252FE41F17671F00C5B740 /* FetchedResultsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FetchedResultsManager.swift; sourceTree = "<group>"; };
 		2F252FE51F17671F00C5B740 /* ManagedObjectType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObjectType.swift; sourceTree = "<group>"; };
 		2F252FE61F17671F00C5B740 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
-		2F252FE71F17671F00C5B740 /* NSManageObject+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManageObject+Extensions.swift"; sourceTree = "<group>"; };
+		2F84CD3D1FBAC48E0062BF8B /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
+		2F84CD3F1FBAC5C40062BF8B /* CoreDataCustomEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataCustomEnum.swift; sourceTree = "<group>"; };
+		2F84CD421FBADE530062BF8B /* CoreDataConcurrencyType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataConcurrencyType.swift; sourceTree = "<group>"; };
+		2F84CD441FBAE3050062BF8B /* CoreDataFetchRequestType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFetchRequestType.swift; sourceTree = "<group>"; };
+		2F84CD461FBBF0B40062BF8B /* NSFetchRequest+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSFetchRequest+Extension.swift"; sourceTree = "<group>"; };
+		2F84CD481FBBF3020062BF8B /* CoreDataType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataType.swift; sourceTree = "<group>"; };
+		2F84CD4B1FC28D320062BF8B /* NSManagedObject+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSManagedObject+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,11 +112,10 @@
 			isa = PBXGroup;
 			children = (
 				2F252F861F15CDE900C5B740 /* Person.xcdatamodeld */,
-				2F0DF95D1F15B144005EAE12 /* CoreDataAPI.swift */,
-				2F0DF95E1F15B144005EAE12 /* Parent.swift */,
+				2F0DF95E1F15B144005EAE12 /* GrandFather.swift */,
 				2F0DF95F1F15B144005EAE12 /* Children.swift */,
-				2F0DF9601F15B144005EAE12 /* Person.swift */,
-				2F0DF94F1F15B11E005EAE12 /* Extensions */,
+				2F0DF9601F15B144005EAE12 /* Father.swift */,
+				2F84CD4E1FC2CCA00062BF8B /* Core */,
 			);
 			name = CoreData;
 			sourceTree = "<group>";
@@ -124,18 +131,23 @@
 			name = View;
 			sourceTree = "<group>";
 		};
-		2F0DF94F1F15B11E005EAE12 /* Extensions */ = {
+		2F84CD4E1FC2CCA00062BF8B /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				2F84CD3D1FBAC48E0062BF8B /* CoreData.swift */,
+				2F84CD481FBBF3020062BF8B /* CoreDataType.swift */,
+				2F84CD421FBADE530062BF8B /* CoreDataConcurrencyType.swift */,
+				2F84CD441FBAE3050062BF8B /* CoreDataFetchRequestType.swift */,
+				2F252FE51F17671F00C5B740 /* ManagedObjectType.swift */,
+				2F84CD3F1FBAC5C40062BF8B /* CoreDataCustomEnum.swift */,
+				2F84CD461FBBF0B40062BF8B /* NSFetchRequest+Extension.swift */,
 				2F252FE11F17671F00C5B740 /* Collection+CoreDataExtensions.swift */,
-				2F252FE21F17671F00C5B740 /* CoreDataOperationsType.swift */,
 				2F252FE31F17671F00C5B740 /* CoreDataStack.swift */,
 				2F252FE41F17671F00C5B740 /* FetchedResultsManager.swift */,
-				2F252FE51F17671F00C5B740 /* ManagedObjectType.swift */,
 				2F252FE61F17671F00C5B740 /* NSManagedObjectContext+Extensions.swift */,
-				2F252FE71F17671F00C5B740 /* NSManageObject+Extensions.swift */,
+				2F84CD4B1FC28D320062BF8B /* NSManagedObject+Extensions.swift */,
 			);
-			name = Extensions;
+			path = Core;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -211,21 +223,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F0DF9621F15B144005EAE12 /* CoreDataAPI.swift in Sources */,
 				2F252FD21F174ED500C5B740 /* NSFetchedResultsViewController.swift in Sources */,
+				2F84CD431FBADE530062BF8B /* CoreDataConcurrencyType.swift in Sources */,
 				2F252FE81F17671F00C5B740 /* Collection+CoreDataExtensions.swift in Sources */,
+				2F84CD451FBAE3050062BF8B /* CoreDataFetchRequestType.swift in Sources */,
 				2F252FEA1F17671F00C5B740 /* CoreDataStack.swift in Sources */,
+				2F84CD401FBAC5C40062BF8B /* CoreDataCustomEnum.swift in Sources */,
 				2F252F881F15CDE900C5B740 /* Person.xcdatamodeld in Sources */,
+				2F84CD491FBBF3020062BF8B /* CoreDataType.swift in Sources */,
 				2F0DF9671F15B155005EAE12 /* FPSView.swift in Sources */,
-				2F252FEE1F17671F00C5B740 /* NSManageObject+Extensions.swift in Sources */,
 				2F252FEC1F17671F00C5B740 /* ManagedObjectType.swift in Sources */,
 				2F0DF9641F15B144005EAE12 /* Children.swift in Sources */,
 				2F0DF93D1F15B0A9005EAE12 /* ViewController.swift in Sources */,
 				2F0DF93B1F15B0A9005EAE12 /* AppDelegate.swift in Sources */,
-				2F252FE91F17671F00C5B740 /* CoreDataOperationsType.swift in Sources */,
-				2F0DF9651F15B144005EAE12 /* Person.swift in Sources */,
+				2F0DF9651F15B144005EAE12 /* Father.swift in Sources */,
 				2F252FEB1F17671F00C5B740 /* FetchedResultsManager.swift in Sources */,
-				2F0DF9631F15B144005EAE12 /* Parent.swift in Sources */,
+				2F84CD3E1FBAC48E0062BF8B /* CoreData.swift in Sources */,
+				2F0DF9631F15B144005EAE12 /* GrandFather.swift in Sources */,
+				2F84CD471FBBF0B40062BF8B /* NSFetchRequest+Extension.swift in Sources */,
+				2F84CD4C1FC28D320062BF8B /* NSManagedObject+Extensions.swift in Sources */,
 				2F252FED1F17671F00C5B740 /* NSManagedObjectContext+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -299,7 +315,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -349,7 +365,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -363,6 +379,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = CoreDataExtensions/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = YZF.CoreDataExtensions;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -377,6 +394,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = CoreDataExtensions/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = YZF.CoreDataExtensions;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -1,9 +1,8 @@
 //
 //  FetchedResultsControllerManager.swift
-//  文言诗词
 //
-//  Created by 叶增峰 on 21/2/17.
-//  Copyright © 2017年 叶增峰. All rights reserved.
+//  Created by YZF on 21/2/17.
+//  Copyright © 2017年 YZF. All rights reserved.
 //
 
 import Foundation
@@ -11,19 +10,18 @@ import CoreData
 import UIKit
 
 private protocol DataProvider: class {
-    associatedtype Entity: NSManagedObject
-    func sections() -> [NSFetchedResultsSectionInfo]?
-    func sectionIndexTitles() -> [String]
-    func fetchedObjects() -> [Entity]
-    func objectsAtSection(_ section: Int) -> [Entity]
-    func objectAtIndexPath(_ indexPath: IndexPath) -> Entity
-    func numberOfItemsInSection(_ section: Int) -> Int
+    associatedtype E: NSManagedObject
     func numberOfSections() -> Int
+    func numberOfRowsInSection(_ section: Int) -> Int
+    func sectionTitle(_ section: Int) -> String?
+    func sectionTitles() -> [String]
+    func objects() -> [E]
+    func objectsAtSection(_ section: Int) -> [E]
+    func objectAtIndexPath(_ indexPath: IndexPath) -> E
 }
 
 
-/// 定义所有更新的枚举，附带关联值用于更新UI
-private enum FetchedResultsChange<Entity: NSManagedObject> {
+private enum FetchedResultsChange<E: NSManagedObject> {
     case insert(IndexPath)
     case update(IndexPath)
     case move(IndexPath, IndexPath)
@@ -33,22 +31,26 @@ private enum FetchedResultsChange<Entity: NSManagedObject> {
     case sectionDelete(Int)
 }
 
-class FetchedResultsManager<Entity: NSManagedObject>:NSObject, NSFetchedResultsControllerDelegate, DataProvider {
+class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>:NSObject, NSFetchedResultsControllerDelegate, DataProvider {
     
     fileprivate let fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>
-    fileprivate var updates: [FetchedResultsChange<Entity>] = []
+    fileprivate var updates: [FetchedResultsChange<E>] = []
     fileprivate let tableView: UITableView
     
     
-    /// 初始化 fetchedResultsController
+    /// init fetchedResultsController
     ///
     /// - Parameters:
-    ///   - fetchRequest: fetchRequest必须有NSSortDescriptor，并且第一个 sortDescriptor 的 KeyPath 必须和 sectionName 一致
-    ///   - contextType: 上下文
+    ///   - fetchRequest: fetchRequest's sortDescriptors can't be nil，and first sortDescriptor's KeyPath should same as sectionName
+    ///   - contextType: the context that will hold the fetched objects
     ///   - tableView: tableView
-    ///   - sectionName: 划分 section 的属性名(KeyPath)
-    public init(fetchRequest: NSFetchRequest<NSFetchRequestResult>, contextType: ContextType, tableView: UITableView, sectionName: String?) {
+    ///   - sectionName: keypath on resulting objects that returns the section name. This will be used to pre-compute the section information.
+    ///   - cacheName: Section info is cached persistently to a private file under this name. Cached sections are checked to see if the time stamp matches the store, but not if you have illegally mutated the readonly fetch request, predicate, or sort descriptor.
+    public init(contextType: ContextType, tableView: UITableView, sectionName: String?, cacheName: String?, fetchRequestConfigure: ((NSFetchRequest<NSFetchRequestResult>) -> Void)?) {
+        
+        let fetchRequest = E.sortedFetchRequest
         fetchRequest.returnsObjectsAsFaults = false
+        fetchRequestConfigure?(fetchRequest)
         
         var context: NSManagedObjectContext
         switch contextType {
@@ -57,8 +59,8 @@ class FetchedResultsManager<Entity: NSManagedObject>:NSObject, NSFetchedResultsC
         case .privateContext:
             context = CoreDataStack.shared.privateManagedObjectContext
         }
-        //fetchRequest的第一个sortDescriptor必须和 sectionName 一致
-        fetchedResultsController = NSFetchedResultsController.init(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: sectionName, cacheName: nil)
+
+        fetchedResultsController = NSFetchedResultsController.init(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: sectionName, cacheName: cacheName)
         self.tableView = tableView
         super.init()
         fetchedResultsController.delegate = self
@@ -71,43 +73,41 @@ class FetchedResultsManager<Entity: NSManagedObject>:NSObject, NSFetchedResultsC
         }
     }
     
-    public func sections() -> [NSFetchedResultsSectionInfo]? {
-        guard let results = fetchedResultsController.sections else { return [] }
-        return results
-    }
-    public func sectionIndexTitle(_ section: Int) -> String? {
-        guard let result = fetchedResultsController.sections?[section] else {return nil}
-        return result.indexTitle
-    }
-    public func sectionIndexTitles() -> [String] {
-        let results = fetchedResultsController.sectionIndexTitles
-        return results
-    }
-    
-    public func fetchedObjects() -> [Entity] {
-        guard let results = fetchedResultsController.fetchedObjects as? [Entity] else { fatalError("Unexpected objects") }
-        return results
-    }
-    
-    public func objectsAtSection(_ section: Int) -> [Entity] {
-        guard let result = fetchedResultsController.sections?[section] else { return [] }
-        return result.objects as! [Entity]
-    }
-    
-    public func objectAtIndexPath(_ indexPath: IndexPath) -> Entity {
-        guard let result = fetchedResultsController.object(at: indexPath) as? Entity else { fatalError("Unexpected object at \(indexPath)") }
-        return result
-    }
-    
-    public func numberOfItemsInSection(_ section: Int) -> Int {
-        guard let sec = fetchedResultsController.sections?[section] else { return 0 }
-        return sec.numberOfObjects
-    }
-    
     public func numberOfSections() -> Int {
         guard let num = fetchedResultsController.sections?.count else {return 0}
         return num
     }
+    
+    public func numberOfRowsInSection(_ section: Int) -> Int {
+        guard let sec = fetchedResultsController.sections?[section] else { return 0 }
+        return sec.numberOfObjects
+    }
+    
+    public func sectionTitle(_ section: Int) -> String? {
+        guard let result = fetchedResultsController.sections?[section] else {return nil}
+        return result.indexTitle
+    }
+    
+    public func sectionTitles() -> [String] {
+        let results = fetchedResultsController.sectionIndexTitles
+        return results
+    }
+    
+    public func objects() -> [E] {
+        guard let results = fetchedResultsController.fetchedObjects as? [E] else { fatalError("Unexpected objects") }
+        return results
+    }
+    
+    public func objectsAtSection(_ section: Int) -> [E] {
+        guard let result = fetchedResultsController.sections?[section] else { return [] }
+        return result.objects as! [E]
+    }
+    
+    public func objectAtIndexPath(_ indexPath: IndexPath) -> E {
+        guard let result = fetchedResultsController.object(at: indexPath) as? E else { fatalError("Unexpected object at \(indexPath)") }
+        return result
+    }
+    
     // MARK: NSFetchedResultsControllerDelegate
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -146,7 +146,9 @@ class FetchedResultsManager<Entity: NSManagedObject>:NSObject, NSFetchedResultsC
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        updateTableView()
+        DispatchQueue.main.async {
+            self.updateTableView()
+        }
     }
     
     private func updateTableView() {

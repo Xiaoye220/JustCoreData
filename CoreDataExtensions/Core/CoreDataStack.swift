@@ -19,20 +19,22 @@ class CoreDataStack {
     }()
     
     
-    /// 获取托管对象模型所在的bundle
     lazy var managedObjectModel: NSManagedObjectModel = {
         let modelURL = Bundle.main.url(forResource: self.dataModelName, withExtension: "momd")!
         return NSManagedObjectModel(contentsOf: modelURL)!
     }()
     
-    /// 创建持久化存储协调器，在用对象模型初始化它以后，给它添加 NSSQLiteStoreType 的持久化存储。存储的位置由url指定
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
         var coordinator = NSPersistentStoreCoordinator.init(managedObjectModel: self.managedObjectModel)
         
         let url = self.applicationDocumentsDirectory.appendingPathComponent(self.dataModelName + ".sqlite")
-        print("\(url!)")
+        print("\(url!.path)")
         
         var error: NSError? = nil
+
+        // icloud supports
+//        let options = [NSPersistentStoreUbiquitousContentNameKey: "contentNameKey",
+//                       NSPersistentStoreUbiquitousContainerIdentifierKey: "containerIdentifierKey"]
 
         do{
             try coordinator.addPersistentStore(ofType: NSSQLiteStoreType, configurationName: nil, at: url, options: nil)
@@ -44,7 +46,7 @@ class CoreDataStack {
         return coordinator
     }()
     
-    /// 使用 .mainQueueConcurrencyType 选项创建主上下文，并赋给persistentStoreCoordinator
+    /// main NSManagedObjectContext
     lazy var mainManagedObjectContext: NSManagedObjectContext = {
         let coordinator = self.persistentStoreCoordinator
         
@@ -55,7 +57,7 @@ class CoreDataStack {
         return managedObjectContext
     }()
     
-    /// 创建私有队列上下文，创建的同时添加观察者
+    /// private NSManagedObjectContext
     lazy var privateManagedObjectContext: NSManagedObjectContext = {
         let coordinator = self.persistentStoreCoordinator
         
@@ -94,6 +96,7 @@ class CoreDataStack {
             }
         }
     }
+    
     deinit {
         NotificationCenter.default.removeObserver(CoreDataStack.shared)
     }

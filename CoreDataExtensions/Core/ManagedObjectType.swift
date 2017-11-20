@@ -14,11 +14,9 @@ public protocol ManagedObjectType: class  {
     static var defaultSortDescriptors: [NSSortDescriptor] { get }
     
     func updateFromDictionary(dict: [String: Any])
-    
 }
 
 
-/// 构建通用的 request 用于查询
 extension ManagedObjectType {
     
     /// default fetchReuest
@@ -27,47 +25,15 @@ extension ManagedObjectType {
         return request
     }
     
-    
     /// fetchReuest with defaultSortDescriptors
     public static var sortedFetchRequest: NSFetchRequest<NSFetchRequestResult> {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         request.sortDescriptors = defaultSortDescriptors
         return request
     }
-    
-    
-    /// fetchReuest with NSPredicate
-    public static func fetchRequestWithPredicate(format predicateFormat: String, args: CVarArg...) -> NSFetchRequest<NSFetchRequestResult> {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-        request.predicate = withVaList(args) { NSPredicate(format: predicateFormat, arguments: $0) }
-        return request
-    }
-    
-    public static func fetchRequestWithPredicate(_ predicate: NSPredicate) -> NSFetchRequest<NSFetchRequestResult> {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-        request.predicate = predicate
-        return request
-    }
-    
-    /// fetchReuest with defaultSortDescriptors & NSPredicate
-    public static func sortedFetchRequestWithPredicate(format predicateFormat: String, args: CVarArg...) -> NSFetchRequest<NSFetchRequestResult> {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-        request.sortDescriptors = defaultSortDescriptors
-        request.predicate = withVaList(args) { NSPredicate(format: predicateFormat, arguments: $0) }
-        return request
-    }
-    
-    public static func sortedFetchRequestWithPredicate(_ predicate: NSPredicate) -> NSFetchRequest<NSFetchRequestResult>  {
-        let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-        request.sortDescriptors = defaultSortDescriptors
-        request.predicate = predicate
-        return request
-    }
-    
 }
 
 
-/// 使用 dict 更新属性
 extension ManagedObjectType where Self: NSManagedObject {
     
     public func updateFromDictionary(dict: [String: Any]) {
@@ -126,60 +92,46 @@ extension ManagedObjectType where Self: NSManagedObject {
             }
         }
         let index = predicateFormat.index(predicateFormat.endIndex, offsetBy: -5)
-        predicateFormat = predicateFormat.substring(to: index)
+        predicateFormat = String(predicateFormat[..<index])
+        //predicateFormat = predicateFormat.substring(to: index)
         
         let predicate = NSPredicate(format: predicateFormat, argumentArray: args)
         
-        let object = findOrCreate(predicate, moc: managedObjectContext!, entityName: entity.managedObjectClassName)
-        if let relativeObject = object.object as? ManagedObjectType {
-            if !object.isFind {
-                relativeObject.updateFromDictionary(dict: dict)
-            }
-            return relativeObject as? NSManagedObject
+        let object = findOrCreateInContext(predicate, moc: self.managedObjectContext!, entityName: entity.managedObjectClassName) { obj in
+            guard let obj = obj as? ManagedObjectType else { fatalError("\(entity.managedObjectClassName) dose not implement ManagedObjectType") }
+            obj.updateFromDictionary(dict: dict)
         }
-        return nil
+        
+        return object
     }
     
 }
 
 
 
-/// updateFromDictionary 中建立关系需要使用到的方法
 extension ManagedObjectType where Self: NSManagedObject{
     
-    fileprivate func findOrCreate(_ predicate: NSPredicate?,
+    fileprivate func findOrCreateInContext(_ predicate: NSPredicate,
                                   moc: NSManagedObjectContext,
-                                  entityName: String) -> (object: NSManagedObject, isFind: Bool) {
-        
-        guard let pre = predicate, let obj = findOrFetch(moc, matchingPredicate: pre, entityName: entityName) else {
-            let newObject: NSManagedObject = NSEntityDescription.insertNewObject(forEntityName: entityName, into: moc)
-            return (newObject, false)
+                                  entityName: String,
+                                  configure:((NSManagedObject) -> Void)?) -> NSManagedObject {
+
+        guard let obj = fetchInContext(moc, matchingPredicate: predicate, entityName: entityName) else {
+            let newObject = NSEntityDescription.insertNewObject(forEntityName: entityName, into: moc)
+            configure?(newObject)
+            return newObject
         }
-        return (obj, true)
+        return obj
     }
-    
-    fileprivate  func findOrFetch(_ moc: NSManagedObjectContext, matchingPredicate predicate: NSPredicate, entityName: String) -> NSManagedObject? {
-        return fetchInContext(moc, entityName: entityName) { request in
-            request.predicate = predicate
-            request.returnsObjectsAsFaults = false
-            request.fetchLimit = 1
-            }.first
-    }
-    
-    fileprivate func fetchInContext(_ moc: NSManagedObjectContext,
-                                    entityName: String,
-                                    configurationBlock: (NSFetchRequest<NSFetchRequestResult>) -> () = { _ in }) -> [NSManagedObject] {
-        
+
+    fileprivate  func fetchInContext(_ moc: NSManagedObjectContext, matchingPredicate predicate: NSPredicate, entityName: String) -> NSManagedObject? {
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
-        configurationBlock(request)
-        do {
-            let result = try moc.fetch(request) as! [NSManagedObject]
-            return result
-        } catch  {
-            fatalError("Fetched objects have wrong type")
-        }
+        request.predicate = predicate
+        request.returnsObjectsAsFaults = false
+        request.fetchLimit = 1
+        
+        return (moc.doFetch(request) as? [NSManagedObject])?.first
     }
-    
     
 }
 

@@ -22,14 +22,28 @@ class ViewController: UIViewController {
                          "age": 25,
                          "children": [["id": 2*i-1, "name": "Ding ding", "age": 1],
                                       ["id": 2*i, "name": "La la", "age": 2]],
-                         "parent": ["id": i,
-                                    "name": "Li gang",
-                                    "age": 50]] as [String : Any]
+                         "grandFather": ["id": 1,
+                                         "name": "Li gang",
+                                         "age": 50]] as [String : Any]
             dicts.append(dict)
         }
         return dicts
     }
     
+    /*
+    let childrenDict = ["id": 1,
+                        "name": "Ding ding",
+                        "age": 1,
+                        "father": ["id": 1,
+                                   "name": "Li Lei",
+                                   "age": 25,
+                                   "grandFather": ["id": 1,
+                                                   "name": "Li gang",
+                                                   "age": 50]]
+                        ] as [String : Any]
+    */
+    
+    let cd = CoreData<Father>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,67 +57,132 @@ class ViewController: UIViewController {
     
     
     @IBAction func saveInMainContext(_ sender: Any) {
-        Person.save(by: .mainContext, dataCount: dicts.count, completion: {
-            self.resultLabel.text = "Save in mainContext is" + ($0 ? "success" : "failed")
-        }) { (index, person) in
-            person.updateFromDictionary(dict: self.dicts[index])
-        }
-        
+        cd.concurrencyType(.mainQueue_sync)
+            .saveDataCount(10)
+            .configure { (index, person) in
+                person.updateFromDictionary(dict: self.dicts[index])
+            }
+            .completion { (success, _) in
+                print("\(Thread.current)\nsync save \(success ? "success" : "fail")")
+            }
+            .save()
+    
+        print("perform finish")
     }
     
     @IBAction func saveInPrivateContext(_ sender: Any) {
-        Person.save(by: .privateContext, dataCount: dicts.count, completion: {
-            self.resultLabel.text = "Save in privateContext is" + ($0 ? "success" : "failed")
-        }) { (index, person) in
-            person.updateFromDictionary(dict: self.dicts[index])
-        }
+        cd.concurrencyType(.privateQueue_async)
+            .saveDataCount(5)
+            .configure { (index, person) in
+                person.name = "\(index).Han meimei"
+            }
+            .completion { (success, _) in
+                print("\(Thread.current)\nasync save \(success ? "success" : "fail")")
+            }
+            .save()
+        
+        print("perform finish")
     }
     
     @IBAction func deleteAllInMain(_ sender: Any) {
-        Person.deleteAll(by: .mainContext) {
-            self.resultLabel.text = "Delete in mainContext is" + ($0 ? "success" : "failed")
-        }
+        cd.concurrencyType(.mainQueue_sync)
+            .fetchRequest { _ in }
+            .completion { (success, _) in
+                print("\(Thread.current)\nsync delete \(success ? "success" : "fail")")
+            }
+            .delete()
+        
+        print("perform finish")
     }
     
     @IBAction func deleteAllInPrivate(_ sender: Any) {
-        Person.deleteAll(by: .privateContext) {
-            self.resultLabel.text = "Delete in privateContext is" + ($0 ? "success" : "failed")
-        }
+        cd.concurrencyType(.privateQueue_async)
+            .fetchRequest { _ in }
+            .completion { (success, _) in
+                print("\(Thread.current)\nasync delete \(success ? "success" : "fail")")
+            }
+            .delete()
+        
+        print("perform finish")
     }
     
     @IBAction func updateInMain(_ sender: Any) {
-        let dict = ["id": 1, "name": "Han meimei", "age": 15] as [String : Any]
-        let predicate = NSPredicate(format: "id == %ld", 1)
+        cd.concurrencyType(.mainQueue_sync)
+            .fetchRequest { request in
+                request.predicate(NSPredicate(format: "name = %@", "1.Li lei"))
+            }
+            .configure { (index, person) in
+                person.name = "Bob"
+            }
+            .completion { (success, _) in
+                print("\(Thread.current)\nsync update \(success ? "success" : "fail")")
+            }
+            .update()
         
-        Person.update(by: .mainContext, predicate: predicate, completion: {
-            self.resultLabel.text = "Update in mainContext is" + ($0 ? "success" : "failed")
-        }) { person in
-            person.updateFromDictionary(dict: dict)
-        }
+        print("perform finish")
     }
     
     @IBAction func updateInPrivate(_ sender: Any) {
-        let dict = ["id": 1, "name": "Xiao hong", "age": 15] as [String : Any]
-        let predicate = NSPredicate(format: "id == %ld", 1)
+        cd.concurrencyType(.privateQueue_async)
+            .fetchRequest { request in
+                request.predicate(NSPredicate(format: "name = %@", "1.Han meimei"))
+            }
+            .configure { (index, person) in
+                person.name = "Lily"
+            }
+            .completion { (success, _) in
+                print("\(Thread.current)\nasync update \(success ? "success" : "fail")")
+            }
+            .update()
         
-        Person.update(by: .privateContext, predicate: predicate, completion: {
-            self.resultLabel.text = "Update in privateContext is" + ($0 ? "success" : "failed")
-        }) { person in
-            person.updateFromDictionary(dict: dict)
-        }
+        print("perform finish")
     }
     
     @IBAction func syncFind(_ sender: Any) {
-        let results = Person.findAll()
-        resultLabel.text = "Sync find success, count of data: " + String(results.count)
+        cd.concurrencyType(.mainQueue_sync)
+            .fetchRequest { request in
+                request.predicate(NSPredicate(format: "name = %@", "Li lei"))
+                    .fetchLimit(1)
+                    .resultType(.managedObjectResultType)
+            }
+            .completion { (success, results) in
+                print("\(Thread.current)\nsync find \(success ? "success" : "fail")")
+                let persons = results as! [Father]
+                print("result count: \(persons.count)")
+            }
+            .read()
+        
+        print("perform finish")
     }
     
     @IBAction func asyncFind(_ sender: Any) {
-        Person.asyncFindAll { results in
-            self.resultLabel.text = "Async find success, count of data: " + String(results.count)
-        }
+        cd.concurrencyType(.privateQueue_async)
+            .fetchRequest { _ in
+                //request.predicate(NSPredicate(format: "name = %@", "Li lei"))
+            }
+            .completion { (success, results) in
+                print("\(Thread.current)\nasync find \(success ? "success" : "fail")")
+                let persons = results as! [Father]
+                print("result count: \(persons.count)")
+            }
+            .read()
+        
+        print("perform finish")
     }
 
-
+    @IBAction func customTest(_ sender: Any) {
+        cd.concurrencyType(.mainQueue_sync)
+            .fetchRequest { request in
+                request.sortDescriptors([NSSortDescriptor(key: "name", ascending: true)])
+                    .returnsObjectsAsFaults(false)
+                    .includesPropertyValues(true)
+            }
+            .completion { (success, results) in
+                let persons = results as! [Father]
+                persons.forEach{print($0.name!)}
+            }
+            .read()
+    }
+    
 }
 

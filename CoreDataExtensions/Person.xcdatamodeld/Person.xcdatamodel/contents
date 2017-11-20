@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="12141" systemVersion="16F73" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13533" systemVersion="17B48" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Children" representedClassName="Children" syncable="YES" codeGenerationType="class">
         <attribute name="age" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="person" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Person" inverseName="children" inverseEntity="Person" syncable="YES"/>
+        <relationship name="father" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Father" inverseName="children" inverseEntity="Father" syncable="YES"/>
     </entity>
-    <entity name="Parent" representedClassName="Parent" syncable="YES" codeGenerationType="class">
+    <entity name="Father" representedClassName="Father" syncable="YES" codeGenerationType="class">
         <attribute name="age" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="persons" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Person" inverseName="parent" inverseEntity="Person" syncable="YES"/>
+        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Children" inverseName="father" inverseEntity="Children" syncable="YES"/>
+        <relationship name="grandFather" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GrandFather" inverseName="father" inverseEntity="GrandFather" syncable="YES"/>
     </entity>
-    <entity name="Person" representedClassName="Person" syncable="YES" codeGenerationType="class">
+    <entity name="GrandFather" representedClassName="GrandFather" syncable="YES" codeGenerationType="class">
         <attribute name="age" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="children" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Children" inverseName="person" inverseEntity="Children" syncable="YES"/>
-        <relationship name="parent" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Parent" inverseName="persons" inverseEntity="Parent" syncable="YES"/>
+        <relationship name="father" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Father" inverseName="grandFather" inverseEntity="Father" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Person" positionX="-63" positionY="-18" width="128" height="120"/>
         <element name="Children" positionX="-54" positionY="27" width="128" height="105"/>
-        <element name="Parent" positionX="-36" positionY="36" width="128" height="105"/>
+        <element name="GrandFather" positionX="-36" positionY="36" width="128" height="105"/>
+        <element name="Father" positionX="-63" positionY="-18" width="128" height="120"/>
     </elements>
 </model>

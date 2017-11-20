@@ -42,11 +42,22 @@ extension NSManagedObjectContext {
     }
     
     @discardableResult
-    public func delete<A: NSManagedObject>(_ entitys: [A]) -> Bool where A: ManagedObjectType {
-        for entity in entitys {
+    public func doExcute(_ request: NSPersistentStoreRequest) -> NSPersistentStoreResult {
+        do {
+            let result = try self.execute(request)
+            return result
+        } catch {
+            let nserror = error as NSError
+            fatalError("Unresolved error \(nserror), \(nserror.userInfo)")
+        }
+    }
+    
+    @discardableResult
+    public func delete(_ entities: [NSManagedObject]) -> Bool {
+        for entity in entities {
             self.delete(entity)
         }
-        return saveOrRollback()
+        return true
     }
     
 

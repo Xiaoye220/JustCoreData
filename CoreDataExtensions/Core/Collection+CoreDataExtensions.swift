@@ -8,7 +8,7 @@
 import CoreData
 
 
-// MARK: - 将惰值都实例化，避免多次实例化惰值造成大的开销
+// MARK: - Turn all daults to objects, reduce the cost
 extension Collection where Iterator.Element: NSManagedObject {
     public func fetchObjectsThatAreFaults() {
         guard !self.isEmpty else { return }

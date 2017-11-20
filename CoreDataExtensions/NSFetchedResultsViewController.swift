@@ -10,12 +10,13 @@ import UIKit
 
 class NSFetchedResultsViewController: UITableViewController {
 
-    var fetchedResultsManager: FetchedResultsManager<Person>!
-    
+    var fetchedResultsManager: FetchedResultsManager<Father>!
+    let cd = CoreData<Father>()
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        fetchedResultsManager = FetchedResultsManager.init(fetchRequest: Person.sortedFetchRequest, contextType: .mainContext, tableView: tableView, sectionName: nil)
+        fetchedResultsManager = FetchedResultsManager<Father>(contextType: .privateContext, tableView: tableView, sectionName: nil, cacheName: nil, fetchRequestConfigure: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,7 +31,7 @@ class NSFetchedResultsViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return fetchedResultsManager.numberOfItemsInSection(section)
+        return fetchedResultsManager.numberOfRowsInSection(section)
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -44,13 +45,19 @@ class NSFetchedResultsViewController: UITableViewController {
     }
     
     @IBAction func save(_ sender: Any) {
-        Person.save(by: .mainContext, dataCount: 1) {
-            $1.id = 1000
-            $1.name = "Lily"
-        }
+        cd.concurrencyType(.mainQueue_sync)
+            .configure { (index, person) in
+                person.id = 1000
+                person.name = "Lily"
+            }
+            .save()
     }
     @IBAction func deletePerson(_ sender: Any) {
-        Person.delete(by: .mainContext, predicate: NSPredicate.init(format: "name = %@", "Lily"))
+        cd.concurrencyType(.privateQueue_async)
+            .fetchRequest { request in
+                request.predicate(NSPredicate.init(format: "name = %@", "Lily"))
+            }
+            .delete()
     }
  
     
