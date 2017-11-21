@@ -5,13 +5,14 @@
 ### 1.Data Model
 
 先看例子中的 Data Model
-
+>Data model in the example
 ![DataModel](https://github.com/Xiaoye220/CoreDataExtensions/blob/master/ScreenShot/DataModel.png)
 
 
-### 2.实体实现 ManagedObjectType 协议
+### 2.ManagedObjectType
 
-实体需要实现 ManagedObjectType 协议，协议实现了根据实体名和默认 NSSortDescriptor ，并提供了根据 Dictionary 给实体赋值的功能，此处以实体 Person 做例子。
+实体需要实现 ManagedObjectType 协议，协议实现了根据实体名和默认 NSSortDescriptor ，并提供了根据 Dictionary 给实体赋值的功能。
+>Entities should implement ManagedObjectType protocol.
 
 ```swift
 extension Father: ManagedObjectType {
@@ -26,10 +27,13 @@ extension Father: ManagedObjectType {
 ```
 
 
-### 4.操作数据库
-以 Father 实现 CoreDataOperationsType 协议为例
-#### 数据源
+### 3.Usage
+
+#### DataSource
+
 自定义 dict 用来存储需要进行操作的数据。
+>dicts are the data that should to be saved
+
 ```swift
 var dicts: [[String: Any]] {
         var dicts: [[String: Any]] = []
@@ -47,12 +51,13 @@ var dicts: [[String: Any]] {
         return dicts
     }
 ```
-#### 初始化 CoreData 类
+#### Init CoreData
+
 ```Swift
 let cd = CoreData<Father>()
 ```
 
-#### 保存
+#### Save
 ```swift
 cd.concurrencyType(.mainQueue_sync)
     .saveDataCount(10)
@@ -64,11 +69,10 @@ cd.concurrencyType(.mainQueue_sync)
     }
     .save()
 ```
-上面 ``person.updateFromDictionary(dict: self.dicts[index])`` 可以根据字典给实体初始化，实体包含关系的话，也可以实现其中的关系。如上述 dict 中含有 children 和 parent，那个给 Person 实体初始化时可以将 Person 的 children 和 parent 的关系一起实现。
+上面 ``person.updateFromDictionary(dict: self.dicts[index])`` 可以根据字典给实体初始化，实体包含关系的话，也可以实现其中的关系。当然也可以通过自己的方式给实体赋值。
+> ``person.updateFromDictionary(dict: self.dicts[index])`` can update entity with dictionary.If there are relationships between entities,the relationships can also be implemented.Of course, you can update entity by your own way.
 
-当然也可以通过自己的方式给实体赋值。
-
-#### 删除
+#### Delete
 ```swift
 cd.concurrencyType(.mainQueue_sync)
     .fetchRequest { _ in }
@@ -78,9 +82,9 @@ cd.concurrencyType(.mainQueue_sync)
     .delete()
 ```
 fetchRequest 用于选择需要删除的实体
+>fetchRequest use to fetch entities that need to be deleted
 
-
-#### 更新数据
+#### Update
 ```swift
 cd.concurrencyType(.mainQueue_sync)
     .fetchRequest { request in
@@ -95,8 +99,7 @@ cd.concurrencyType(.mainQueue_sync)
 
 ```
 
-#### 查找数据
-
+#### Read
 
 ```swift
 cd.concurrencyType(.mainQueue_sync)
@@ -115,11 +118,12 @@ cd.concurrencyType(.mainQueue_sync)
 ```
 
 
-### 5.NSFetchedResultsController
+### 4.NSFetchedResultsController
 
 除了以上功能，对 NSFetchedResultsController 也做了一些封装
+>some NSFetchedResultsController extensions. Operating database will update tableview directly.
 
-#### 使用
+#### Usage
 ``` Swift 
 class NSFetchedResultsViewController: UITableViewController {
 
@@ -128,8 +132,7 @@ class NSFetchedResultsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // 初始化 FetchedResultsManager，下面就可以直接通过 fetchedResultsManager 实现 tableView 的数据源
-        // 任何对 Core Data 的操作可以直接反应在 tableView 上
+        // init FetchedResultsManager
         fetchedResultsManager = FetchedResultsManager<Father>(contextType: .privateContext, tableView: tableView, sectionName: nil, cacheName: nil, fetchRequestConfigure: nil)
     }
 
