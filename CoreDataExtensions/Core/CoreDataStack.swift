@@ -9,23 +9,23 @@ import CoreData
 
 public class CoreDataStack {
     
-    static var dataModelName: String?
+    public static var dataModelName: String?
     
-    static let shared = CoreDataStack()
+    public static let shared = CoreDataStack()
     
-    lazy var applicationDocumentsDirectory: NSURL = {
+    public lazy var applicationDocumentsDirectory: NSURL = {
         let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return urls[urls.count-1] as NSURL
     }()
     
     
-    lazy var managedObjectModel: NSManagedObjectModel = {
+    public lazy var managedObjectModel: NSManagedObjectModel = {
         guard let dataModelName = CoreDataStack.dataModelName else { fatalError("CoreDataStack.dataModelName cann't be nil") }
         let modelURL = Bundle.main.url(forResource: dataModelName, withExtension: "momd")!
         return NSManagedObjectModel(contentsOf: modelURL)!
     }()
     
-    lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
+    public lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
         guard let dataModelName = CoreDataStack.dataModelName else { fatalError("CoreDataStack.dataModelName cann't be nil") }
         
         var coordinator = NSPersistentStoreCoordinator.init(managedObjectModel: self.managedObjectModel)
@@ -50,7 +50,7 @@ public class CoreDataStack {
     }()
     
     /// main NSManagedObjectContext
-    lazy var mainManagedObjectContext: NSManagedObjectContext = {
+    public lazy var mainManagedObjectContext: NSManagedObjectContext = {
         let coordinator = self.persistentStoreCoordinator
         
         var managedObjectContext = NSManagedObjectContext.init(concurrencyType: .mainQueueConcurrencyType)
@@ -61,7 +61,7 @@ public class CoreDataStack {
     }()
     
     /// private NSManagedObjectContext
-    lazy var privateManagedObjectContext: NSManagedObjectContext = {
+    public lazy var privateManagedObjectContext: NSManagedObjectContext = {
         let coordinator = self.persistentStoreCoordinator
         
         var managedObjectContext = NSManagedObjectContext.init(concurrencyType: .privateQueueConcurrencyType)
