@@ -6,6 +6,7 @@
 
 先看例子中的 Data Model
 >Data model in the example
+
 ![DataModel](https://github.com/Xiaoye220/CoreDataExtensions/blob/master/ScreenShot/DataModel.png)
 
 
@@ -29,7 +30,7 @@ extension Father: ManagedObjectType {
 
 ### 3.Usage
 
-#### DataSource
+#### (1)DataSource
 
 自定义 dict 用来存储需要进行操作的数据。
 >dicts are the data that should to be saved
@@ -51,13 +52,13 @@ var dicts: [[String: Any]] {
         return dicts
     }
 ```
-#### Init CoreData
+#### (2)Init
 
 ```Swift
 let cd = CoreData<Father>()
 ```
 
-#### Save
+#### (3)Save
 ```swift
 cd.concurrencyType(.mainQueue_sync)
     .saveDataCount(10)
@@ -72,7 +73,7 @@ cd.concurrencyType(.mainQueue_sync)
 上面 ``person.updateFromDictionary(dict: self.dicts[index])`` 可以根据字典给实体初始化，实体包含关系的话，也可以实现其中的关系。当然也可以通过自己的方式给实体赋值。
 > ``person.updateFromDictionary(dict: self.dicts[index])`` can update entity with dictionary.If there are relationships between entities,the relationships can also be implemented.Of course, you can update entity by your own way.
 
-#### Delete
+#### (4)Delete
 ```swift
 cd.concurrencyType(.mainQueue_sync)
     .fetchRequest { _ in }
@@ -84,7 +85,7 @@ cd.concurrencyType(.mainQueue_sync)
 fetchRequest 用于选择需要删除的实体
 >fetchRequest use to fetch entities that need to be deleted
 
-#### Update
+#### (5)Update
 ```swift
 cd.concurrencyType(.mainQueue_sync)
     .fetchRequest { request in
@@ -99,7 +100,7 @@ cd.concurrencyType(.mainQueue_sync)
 
 ```
 
-#### Read
+#### (6)Read
 
 ```swift
 cd.concurrencyType(.mainQueue_sync)
