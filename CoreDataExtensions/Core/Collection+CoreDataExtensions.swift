@@ -9,7 +9,7 @@ import CoreData
 
 
 // MARK: - Turn all daults to objects, reduce the cost
-extension Collection where Iterator.Element: NSManagedObject {
+public extension Collection where Iterator.Element: NSManagedObject {
     public func fetchObjectsThatAreFaults() {
         guard !self.isEmpty else { return }
         guard let context = self.first?.managedObjectContext else { fatalError("Managed object must have context") }

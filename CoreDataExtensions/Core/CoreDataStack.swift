@@ -7,7 +7,7 @@
 
 import CoreData
 
-class CoreDataStack {
+public class CoreDataStack {
     
     static var dataModelName: String?
     

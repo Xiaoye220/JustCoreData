@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-protocol CoreDataType: CoreDataConcurrencyType, CoreDataFetchRequestType where ManagedObject: NSManagedObject {
+public protocol CoreDataType: CoreDataConcurrencyType, CoreDataFetchRequestType where ManagedObject: NSManagedObject {
     
     /// The number of data needed to save, default is 1
     var saveDataCount: Int { get set }

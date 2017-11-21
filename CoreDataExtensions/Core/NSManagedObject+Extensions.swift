@@ -15,5 +15,4 @@ extension NSManagedObject {
         print("the entity \(type(of: self)) is not key value coding-compliant for the key \"\(key)\".")
     }
     
-
 }

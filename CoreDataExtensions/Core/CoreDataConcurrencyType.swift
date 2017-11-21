@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-internal protocol CoreDataConcurrencyType: class {
+public protocol CoreDataConcurrencyType: class {
     
     var concurrencyType: ConcurrencyType { get set }
     
@@ -21,7 +21,7 @@ internal protocol CoreDataConcurrencyType: class {
 }
 
 extension CoreDataConcurrencyType {
-    func context() -> NSManagedObjectContext {
+    public func context() -> NSManagedObjectContext {
         switch self.concurrencyType {
         case .mainQueue_sync, .mainQueue_async:
             return CoreDataStack.shared.mainManagedObjectContext
@@ -30,7 +30,7 @@ extension CoreDataConcurrencyType {
         }
     }
     
-    func perform(_ closure: @escaping (NSManagedObjectContext) -> Void) {
+    public func perform(_ closure: @escaping (NSManagedObjectContext) -> Void) {
         let context = self.context()
         switch self.concurrencyType {
         case .mainQueue_sync:

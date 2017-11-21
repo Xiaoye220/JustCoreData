@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-internal protocol CoreDataFetchRequestType: class {
+public protocol CoreDataFetchRequestType: class {
     associatedtype ManagedObject: ManagedObjectType
 
     var fetchRequest: NSFetchRequest<NSFetchRequestResult>? { get set }

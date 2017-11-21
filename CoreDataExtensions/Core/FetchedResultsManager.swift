@@ -31,7 +31,7 @@ private enum FetchedResultsChange<E: NSManagedObject> {
     case sectionDelete(Int)
 }
 
-class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>:NSObject, NSFetchedResultsControllerDelegate, DataProvider {
+public class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>:NSObject, NSFetchedResultsControllerDelegate, DataProvider {
     
     fileprivate let fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>
     fileprivate var updates: [FetchedResultsChange<E>] = []
@@ -110,11 +110,11 @@ class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>:NSObject, NS
     
     // MARK: NSFetchedResultsControllerDelegate
     
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    public func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         updates = []
     }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+    public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
         case .insert:
             guard let indexPath = newIndexPath else { fatalError("Index path should be not nil") }
@@ -132,7 +132,7 @@ class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>:NSObject, NS
         }
     }
     
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
+    public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type {
         case .insert:
             updates.append(.sectionInsert(sectionIndex))
@@ -145,7 +145,7 @@ class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>:NSObject, NS
         }
     }
     
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    public func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         DispatchQueue.main.async {
             self.updateTableView()
         }

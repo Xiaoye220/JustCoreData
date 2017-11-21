@@ -13,19 +13,19 @@ final public class CoreData<E: NSManagedObject & ManagedObjectType>: CoreDataTyp
     
     public init() {}
     
-    typealias ManagedObject = E
+    public typealias ManagedObject = E
     
-    var concurrencyType: ConcurrencyType = .mainQueue_sync
+    public var concurrencyType: ConcurrencyType = .mainQueue_sync
     
-    var fetchRequest: NSFetchRequest<NSFetchRequestResult>?
+    public var fetchRequest: NSFetchRequest<NSFetchRequestResult>?
 
-    var saveDataCount: Int = 1
-    var saveBatchSize: Int = Int.max
+    public var saveDataCount: Int = 1
+    public var saveBatchSize: Int = Int.max
     
-    var configure: ((Int, E) -> Void)?
-    var completion: ((Bool, [Any]?) -> Void)?
+    public var configure: ((Int, E) -> Void)?
+    public var completion: ((Bool, [Any]?) -> Void)?
     
-    var entities: [E] = []
+    public var entities: [E] = []
     
 }
 
