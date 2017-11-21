@@ -9,8 +9,10 @@
 
 ![DataModel](https://github.com/Xiaoye220/CoreDataExtensions/blob/master/ScreenShot/DataModel.png)
 
+### 2.CocoaPods
 
-### 2.ManagedObjectType
+
+### 3.ManagedObjectType
 
 实体需要实现 ManagedObjectType 协议，协议实现了根据实体名和默认 NSSortDescriptor ，并提供了根据 Dictionary 给实体赋值的功能。
 >Entities should implement ManagedObjectType protocol.
@@ -28,7 +30,7 @@ extension Father: ManagedObjectType {
 ```
 
 
-### 3.Usage
+### 4.Usage
 
 #### (1)DataSource
 
@@ -56,7 +58,12 @@ var dicts: [[String: Any]] {
 
 ```Swift
 let cd = CoreData<Father>()
+
+CoreDataStack.dataModelName = "Person"
 ```
+dataModelName是 .xcdatamodeld 文件的名字
+>dataModelName is the name of .xcdatamodeld file
+
 
 #### (3)Save
 ```swift
@@ -119,7 +126,7 @@ cd.concurrencyType(.mainQueue_sync)
 ```
 
 
-### 4.NSFetchedResultsController
+### 5.NSFetchedResultsController
 
 除了以上功能，对 NSFetchedResultsController 也做了一些封装
 >some NSFetchedResultsController extensions. Operating database will update tableview directly.

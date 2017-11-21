@@ -9,7 +9,7 @@ import CoreData
 
 class CoreDataStack {
     
-    let dataModelName = "Person"
+    static var dataModelName: String?
     
     static let shared = CoreDataStack()
     
@@ -20,14 +20,17 @@ class CoreDataStack {
     
     
     lazy var managedObjectModel: NSManagedObjectModel = {
-        let modelURL = Bundle.main.url(forResource: self.dataModelName, withExtension: "momd")!
+        guard let dataModelName = CoreDataStack.dataModelName else { fatalError("CoreDataStack.dataModelName cann't be nil") }
+        let modelURL = Bundle.main.url(forResource: dataModelName, withExtension: "momd")!
         return NSManagedObjectModel(contentsOf: modelURL)!
     }()
     
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
+        guard let dataModelName = CoreDataStack.dataModelName else { fatalError("CoreDataStack.dataModelName cann't be nil") }
+        
         var coordinator = NSPersistentStoreCoordinator.init(managedObjectModel: self.managedObjectModel)
         
-        let url = self.applicationDocumentsDirectory.appendingPathComponent(self.dataModelName + ".sqlite")
+        let url = self.applicationDocumentsDirectory.appendingPathComponent(dataModelName + ".sqlite")
         print("\(url!.path)")
         
         var error: NSError? = nil

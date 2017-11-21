@@ -11,6 +11,8 @@ import CoreData
 
 final public class CoreData<E: NSManagedObject & ManagedObjectType>: CoreDataType {
     
+    public init() {}
+    
     typealias ManagedObject = E
     
     var concurrencyType: ConcurrencyType = .mainQueue_sync

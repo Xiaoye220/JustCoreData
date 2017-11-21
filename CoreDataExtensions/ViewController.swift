@@ -48,6 +48,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        CoreDataStack.dataModelName = "Person"
     }
     
     override func didReceiveMemoryWarning() {
