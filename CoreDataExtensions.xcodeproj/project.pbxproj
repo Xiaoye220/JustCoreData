@@ -115,7 +115,7 @@
 				2F0DF95E1F15B144005EAE12 /* GrandFather.swift */,
 				2F0DF95F1F15B144005EAE12 /* Children.swift */,
 				2F0DF9601F15B144005EAE12 /* Father.swift */,
-				2F84CD4E1FC2CCA00062BF8B /* Core */,
+				2F84CD4E1FC2CCA00062BF8B /* Code */,
 			);
 			name = CoreData;
 			sourceTree = "<group>";
@@ -131,7 +131,7 @@
 			name = View;
 			sourceTree = "<group>";
 		};
-		2F84CD4E1FC2CCA00062BF8B /* Core */ = {
+		2F84CD4E1FC2CCA00062BF8B /* Code */ = {
 			isa = PBXGroup;
 			children = (
 				2F84CD3D1FBAC48E0062BF8B /* CoreData.swift */,
@@ -147,7 +147,7 @@
 				2F252FE61F17671F00C5B740 /* NSManagedObjectContext+Extensions.swift */,
 				2F84CD4B1FC28D320062BF8B /* NSManagedObject+Extensions.swift */,
 			);
-			path = Core;
+			path = Code;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
