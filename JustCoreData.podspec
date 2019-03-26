@@ -21,11 +21,11 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/Xiaoye220/JustCoreData'
+  s.homepage         = 'https://github.com/Xiaoye220/CoreData'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Xiaoye220' => '576934532@qq.com' }
-  s.source           = { :git => 'https://github.com/Xiaoye220/JustCoreData.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/Xiaoye220/CoreData.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
