@@ -27,7 +27,7 @@ extension CoreDataFetchRequestType {
     @discardableResult
     public func fetchRequest(_ configure: (NSFetchRequest<NSFetchRequestResult>) -> Void) -> Self {
         if self.fetchRequest == nil {
-            self.fetchRequest = ManagedObject.defaultFetchRequest
+            self.fetchRequest = ManagedObject.sortedFetchRequest
         }
         configure(self.fetchRequest!)
         

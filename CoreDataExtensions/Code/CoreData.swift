@@ -98,7 +98,7 @@ extension CoreData {
     @discardableResult
     public func read() -> Self {
         self.perform { context in
-            guard let request = self.fetchRequest else { fatalError("fetchRequest can not be nil") }
+            let request = self.fetchRequest ?? ManagedObject.sortedFetchRequest
             
             let results: [Any] = context.doFetch(request)
             self.completion?(true, results)
