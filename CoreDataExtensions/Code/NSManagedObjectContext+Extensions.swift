@@ -10,13 +10,13 @@ import CoreData
 
 public extension NSManagedObjectContext {
     
-    public func insertNewObject<A: NSManagedObject>() -> A where A: ManagedObjectType {
+    func insertNewObject<A: NSManagedObject>() -> A where A: ManagedObjectType {
         guard let obj = NSEntityDescription.insertNewObject(forEntityName: A.entityName, into: self) as? A else { fatalError("Wrong object type") }
         return obj
     }
     
     @discardableResult
-    public func saveOrRollback() -> Bool {
+    func saveOrRollback() -> Bool {
         do {
             try save()
             return true
@@ -26,12 +26,12 @@ public extension NSManagedObjectContext {
         }
     }
     
-    public func fetchManagedObject<A: NSManagedObject>(by request:NSFetchRequest<NSFetchRequestResult>) -> [A] where A: ManagedObjectType {
+    func fetchManagedObject<A: NSManagedObject>(by request:NSFetchRequest<NSFetchRequestResult>) -> [A] where A: ManagedObjectType {
         guard let result = try! self.fetch(request) as? [A] else { fatalError("Fetched objects have wrong type") }
         return result
     }
     
-    public func doFetch(_ request:NSFetchRequest<NSFetchRequestResult>) -> [Any] {
+    func doFetch(_ request:NSFetchRequest<NSFetchRequestResult>) -> [Any] {
         do {
             let array = try self.fetch(request)
             return array
@@ -42,7 +42,7 @@ public extension NSManagedObjectContext {
     }
     
     @discardableResult
-    public func doExcute(_ request: NSPersistentStoreRequest) -> NSPersistentStoreResult {
+    func doExcute(_ request: NSPersistentStoreRequest) -> NSPersistentStoreResult {
         do {
             let result = try self.execute(request)
             return result
@@ -53,7 +53,7 @@ public extension NSManagedObjectContext {
     }
     
     @discardableResult
-    public func delete(_ entities: [NSManagedObject]) -> Bool {
+    func delete(_ entities: [NSManagedObject]) -> Bool {
         for entity in entities {
             self.delete(entity)
         }

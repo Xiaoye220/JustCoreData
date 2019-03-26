@@ -40,7 +40,7 @@ class FPSView: UIView {
     
     private func setupDisplayLink() {
         link = CADisplayLink.init(target: self, selector: #selector(tick(_:)))
-        link.add(to: RunLoop.main, forMode: .commonModes)
+        link.add(to: RunLoop.main, forMode: RunLoop.Mode.common)
     }
     
     @objc private func tick(_ link: CADisplayLink) {
