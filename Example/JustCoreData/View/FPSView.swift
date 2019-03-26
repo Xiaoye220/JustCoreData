@@ -23,8 +23,8 @@ class FPSView: UIView {
     }
     
     convenience init() {
-        self.init(frame: CGRect.init(x: UIScreen.main.bounds.width - 90, y: 20, width: 80, height: 30))
-        self.center = CGPoint.init(x: UIScreen.main.bounds.width / 2, y: 40)
+        let y = UIApplication.shared.statusBarFrame.height
+        self.init(frame: CGRect.init(x: UIScreen.main.bounds.width - 90, y: y, width: 80, height: 30))
     }
     
     private func setupFpsLabel() {

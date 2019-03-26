@@ -129,6 +129,8 @@ public class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>:NSObj
         case .delete:
             guard let indexPath = indexPath else { fatalError("Index path should be not nil") }
             updates.append(.delete(indexPath))
+        @unknown default:
+            fatalError("NSFetchedResultsChangeType is a unknown value")
         }
     }
     
@@ -142,6 +144,8 @@ public class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>:NSObj
             break
         case .delete:
             updates.append(.sectionDelete(sectionIndex))
+        @unknown default:
+            fatalError("NSFetchedResultsChangeType is a unknown value")
         }
     }
     

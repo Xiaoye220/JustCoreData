@@ -1,5 +1,5 @@
 //
-//  Father.swift
+//  Son.swift
 //  CoreDataExtensions
 //
 //  Created by YZF on 11/7/17.
@@ -7,15 +7,15 @@
 //
 
 import Foundation
+import JustCoreData
 
-extension GrandFather: ManagedObjectType {
+extension Children: ManagedObjectType {
     
     public static var entityName: String {
-        return "GrandFather"
+        return "Children"
     }
     public static var defaultSortDescriptors: [NSSortDescriptor] {
         return [NSSortDescriptor.init(key: "id", ascending: true)]
     }
 }
-
 

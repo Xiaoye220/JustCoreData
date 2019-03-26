@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'JustCoreData_Example' do
+  pod 'JustCoreData', :path => '../'
+
+  target 'JustCoreData_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
