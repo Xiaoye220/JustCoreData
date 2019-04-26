@@ -31,6 +31,11 @@ private enum FetchedResultsChange<E: NSManagedObject> {
     case sectionDelete(Int)
 }
 
+public enum ContextType {
+    case mainContext
+    case privateContext
+}
+
 public class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>:NSObject, NSFetchedResultsControllerDelegate, DataProvider {
     
     fileprivate let fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>

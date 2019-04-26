@@ -46,7 +46,7 @@ class NSFetchedResultsViewController: UITableViewController {
     }
     
     @IBAction func save(_ sender: Any) {
-        cd.concurrencyType(.mainQueue_sync)
+        cd.concurrencyType(.mainSync)
             .configure { (index, person) in
                 person.id = 1000
                 person.name = "Lily"
@@ -54,7 +54,7 @@ class NSFetchedResultsViewController: UITableViewController {
             .save()
     }
     @IBAction func deletePerson(_ sender: Any) {
-        cd.concurrencyType(.privateQueue_async)
+        cd.concurrencyType(.private)
             .fetchRequest { request in
                 request.predicate(NSPredicate.init(format: "name = %@", "Lily"))
             }

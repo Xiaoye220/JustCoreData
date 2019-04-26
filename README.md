@@ -3,7 +3,7 @@
 ![lisence](https://img.shields.io/badge/license-MIT-orange.svg)
 ![swift](https://img.shields.io/badge/swift-5.0-red.svg)
 
-# CoreDataExtensions
+# JustCoreData
 
 ## CocoaPods
 
@@ -19,7 +19,7 @@ pod 'JustCoreData'
 先看例子中的 Data Model
 >Data model in the example
 
-![DataModel](https://github.com/Xiaoye220/CoreDataExtensions/blob/master/ScreenShot/DataModel.png)
+![DataModel](screenshot/DataModel.png)
 
 
 ### 2.ManagedObjectType

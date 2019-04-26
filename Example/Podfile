@@ -1,11 +1,8 @@
 use_frameworks!
 
+platform :ios,'8.0'
+
 target 'JustCoreData_Example' do
   pod 'JustCoreData', :path => '../'
-
-  target 'JustCoreData_Tests' do
-    inherit! :search_paths
-
-    
-  end
+  
 end

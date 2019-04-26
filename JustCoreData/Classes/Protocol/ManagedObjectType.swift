@@ -11,8 +11,10 @@ import CoreData
 public protocol ManagedObjectType: class  {
     
     static var entityName: String { get }
+    
     static var defaultSortDescriptors: [NSSortDescriptor] { get }
     
+    /// update NSManagedObject with dict
     func updateFromDictionary(dict: [String: Any])
 }
 
@@ -98,7 +100,9 @@ extension ManagedObjectType where Self: NSManagedObject {
         let predicate = NSPredicate(format: predicateFormat, argumentArray: args)
         
         let object = findOrCreateInContext(predicate, moc: self.managedObjectContext!, entityName: entity.managedObjectClassName) { obj in
-            guard let obj = obj as? ManagedObjectType else { fatalError("\(entity.managedObjectClassName!) dose not implement ManagedObjectType") }
+            guard let obj = obj as? ManagedObjectType else {
+                fatalError("\(entity.managedObjectClassName!) dose not implement ManagedObjectType")
+            }
             obj.updateFromDictionary(dict: dict)
         }
         

@@ -15,7 +15,7 @@ final public class CoreData<E: NSManagedObject & ManagedObjectType>: CoreDataTyp
     
     public typealias ManagedObject = E
     
-    public var concurrencyType: ConcurrencyType = .mainQueue_sync
+    public var concurrencyType: ConcurrencyType = .mainSync
     
     public var fetchRequest: NSFetchRequest<NSFetchRequestResult>?
 
@@ -96,7 +96,7 @@ extension CoreData {
     }
     
     @discardableResult
-    public func read() -> Self {
+    public func fetch() -> Self {
         self.perform { context in
             let request = self.fetchRequest ?? ManagedObject.sortedFetchRequest
             

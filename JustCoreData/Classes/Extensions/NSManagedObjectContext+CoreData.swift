@@ -11,7 +11,9 @@ import CoreData
 public extension NSManagedObjectContext {
     
     func insertNewObject<A: NSManagedObject>() -> A where A: ManagedObjectType {
-        guard let obj = NSEntityDescription.insertNewObject(forEntityName: A.entityName, into: self) as? A else { fatalError("Wrong object type") }
+        guard let obj = NSEntityDescription.insertNewObject(forEntityName: A.entityName, into: self) as? A else {
+            fatalError("Wrong object type")
+        }
         return obj
     }
     
@@ -27,7 +29,9 @@ public extension NSManagedObjectContext {
     }
     
     func fetchManagedObject<A: NSManagedObject>(by request:NSFetchRequest<NSFetchRequestResult>) -> [A] where A: ManagedObjectType {
-        guard let result = try! self.fetch(request) as? [A] else { fatalError("Fetched objects have wrong type") }
+        guard let result = try! self.fetch(request) as? [A] else {
+            fatalError("Fetched objects have wrong type")
+        }
         return result
     }
     

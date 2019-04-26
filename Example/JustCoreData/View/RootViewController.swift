@@ -9,19 +9,19 @@
 import UIKit
 import JustCoreData
 
-class ViewController: UIViewController {
+class RootViewController: UIViewController {
 
     var tableView: UITableView!
     
     enum Content: String, CaseIterable {
-        case save_main
-        case save_private
-        case deleteAll_main
-        case deleteAll_private
-        case update_main
-        case update_private
-        case find_sync
-        case find_async
+        case save_main          = "save"
+        case save_private       = "save "
+        case deleteAll_main     = "delete"
+        case deleteAll_private  = "delete "
+        case update_main        = "update"
+        case update_private     = "update "
+        case fetch_main         = "fetch"
+        case fetch_private      = "fetch "
         case NSFetchedResultsController
     }
     
@@ -41,7 +41,15 @@ class ViewController: UIViewController {
         return dicts
     }
     
-    let contents: [Content] = Content.allCases;
+//    let contents: [[Content]] = [[.save_main, .save_private],
+//                                 [.deleteAll_main, .deleteAll_private],
+//                                 [.update_main, .update_private],
+//                                 [.fetch_main, .fetch_private],
+//                                 [.NSFetchedResultsController]];
+    
+    let contents: [[Content]] = [[.save_main, .deleteAll_main, .update_main, .fetch_main],
+                                 [.save_private, .deleteAll_private, .update_private, .fetch_private],
+                                 [.NSFetchedResultsController]];
     
     var cd: CoreData<Father>!
 
@@ -54,7 +62,7 @@ class ViewController: UIViewController {
 
         let y = UIApplication.shared.statusBarFrame.height + 44
         
-        tableView = UITableView(frame: CGRect(x: 0, y: y, width: screenWidth, height: screenHeight - y))
+        tableView = UITableView(frame: CGRect(x: 0, y: y, width: screenWidth, height: screenHeight - y), style: .grouped)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
@@ -66,6 +74,7 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    // initJustCoreData
     func initJustCoreData() {
         CoreDataStack.dataModelName = "Person"
         self.cd = CoreData<Father>()
@@ -73,9 +82,23 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension RootViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 0 {
+            return "Sync on the main queue"
+        } else if section == 1 {
+            return "Async on the private queue"
+        }
+        return ""
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         return contents.count
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return contents[section].count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -83,29 +106,29 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
         if cell == nil {
             cell = UITableViewCell(style: .default, reuseIdentifier: "cell")
         }
-        let content = contents[indexPath.row]
+        let content = contents[indexPath.section][indexPath.row]
         cell.textLabel?.text = content.rawValue
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let content = contents[indexPath.row]
+        let content = contents[indexPath.section][indexPath.row]
         switch content {
         case .save_main:
-            self.saveInMainContext()
+            self.saveOnMainContext()
         case .save_private:
-            self.saveInPrivateContext()
+            self.saveOnPrivateContext()
         case .deleteAll_main:
-            self.deleteAllInMain()
+            self.deleteAllOnMain()
         case .deleteAll_private:
-            self.deleteAllInPrivate()
+            self.deleteAllOnPrivate()
         case .update_main:
-            self.updateInMain()
+            self.updateOnMain()
         case .update_private:
-            self.updateInPrivate()
-        case .find_sync:
+            self.updateOnPrivate()
+        case .fetch_main:
             self.syncFind()
-        case .find_async:
+        case .fetch_private:
             self.asyncFind()
         case .NSFetchedResultsController:
             self.navigationController?.pushViewController(NSFetchedResultsViewController(), animated: true)
@@ -113,9 +136,10 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
-extension ViewController {
-    func saveInMainContext() {
-        cd.concurrencyType(.mainQueue_sync)
+extension RootViewController {
+    
+    func saveOnMainContext() {
+        cd.concurrencyType(.mainSync)
             .saveDataCount(10)
             .configure { (index, person) in
                 person.updateFromDictionary(dict: self.testData[index])
@@ -124,12 +148,14 @@ extension ViewController {
                 print("\(Thread.current)\nsync save \(success ? "success" : "fail")")
             }
             .save()
-        
+        DispatchQueue.global().async {
+            
+        }
         print("perform finish")
     }
     
-    func saveInPrivateContext() {
-        cd.concurrencyType(.privateQueue_async)
+    func saveOnPrivateContext() {
+        cd.concurrencyType(.private)
             .saveDataCount(5)
             .configure { (index, person) in
                 person.name = "\(index).Han meimei"
@@ -142,8 +168,8 @@ extension ViewController {
         print("perform finish")
     }
     
-    func deleteAllInMain() {
-        cd.concurrencyType(.mainQueue_sync)
+    func deleteAllOnMain() {
+        cd.concurrencyType(.mainSync)
             .fetchRequest { _ in }
             .completion { (success, _) in
                 print("\(Thread.current)\nsync delete \(success ? "success" : "fail")")
@@ -153,8 +179,8 @@ extension ViewController {
         print("perform finish")
     }
     
-    func deleteAllInPrivate() {
-        cd.concurrencyType(.privateQueue_async)
+    func deleteAllOnPrivate() {
+        cd.concurrencyType(.private)
             .fetchRequest { _ in }
             .completion { (success, _) in
                 print("\(Thread.current)\nasync delete \(success ? "success" : "fail")")
@@ -164,8 +190,8 @@ extension ViewController {
         print("perform finish")
     }
     
-    func updateInMain() {
-        cd.concurrencyType(.mainQueue_sync)
+    func updateOnMain() {
+        cd.concurrencyType(.mainSync)
             .fetchRequest { request in
                 request.predicate(NSPredicate(format: "name = %@", "1.Li lei"))
             }
@@ -180,8 +206,8 @@ extension ViewController {
         print("perform finish")
     }
     
-    func updateInPrivate() {
-        cd.concurrencyType(.privateQueue_async)
+    func updateOnPrivate() {
+        cd.concurrencyType(.private)
             .fetchRequest { request in
                 request.predicate(NSPredicate(format: "name = %@", "1.Han meimei"))
             }
@@ -197,7 +223,7 @@ extension ViewController {
     }
     
     func syncFind() {
-        cd.concurrencyType(.mainQueue_sync)
+        cd.concurrencyType(.mainSync)
             .fetchRequest { request in
                 request.predicate(NSPredicate(format: "name = %@", "Li lei"))
                     .fetchLimit(1)
@@ -208,13 +234,13 @@ extension ViewController {
                 let persons = results as! [Father]
                 print("result count: \(persons.count)")
             }
-            .read()
+            .fetch()
         
         print("perform finish")
     }
     
     func asyncFind() {
-        cd.concurrencyType(.privateQueue_async)
+        cd.concurrencyType(.private)
             .fetchRequest { _ in
                 //request.predicate(NSPredicate(format: "name = %@", "Li lei"))
             }
@@ -223,7 +249,7 @@ extension ViewController {
                 let persons = results as! [Father]
                 print("result count: \(persons.count)")
             }
-            .read()
+            .fetch()
         
         print("perform finish")
     }

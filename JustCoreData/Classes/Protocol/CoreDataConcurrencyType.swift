@@ -9,11 +9,22 @@
 import Foundation
 import CoreData
 
+public enum ConcurrencyType {
+    /// private can only be Async
+    case `private`
+    case mainSync
+    case mainAsync
+}
+
 public protocol CoreDataConcurrencyType: class {
     
+    /// concurrencyType, default is mainSync
     var concurrencyType: ConcurrencyType { get set }
     
+    /// get NSManagedObjectContext about concurrencyType
     func context() -> NSManagedObjectContext
+    
+    /// `performs` or `performAndWait` on the specified context’s queue about concurrencyType
     func perform(_ closure: @escaping (NSManagedObjectContext) -> Void)
     
     @discardableResult
@@ -23,9 +34,9 @@ public protocol CoreDataConcurrencyType: class {
 extension CoreDataConcurrencyType {
     public func context() -> NSManagedObjectContext {
         switch self.concurrencyType {
-        case .mainQueue_sync, .mainQueue_async:
+        case .mainSync, .mainAsync:
             return CoreDataStack.shared.mainManagedObjectContext
-        case .privateQueue_async:
+        case .private:
             return CoreDataStack.shared.privateManagedObjectContext
         }
     }
@@ -33,21 +44,23 @@ extension CoreDataConcurrencyType {
     public func perform(_ closure: @escaping (NSManagedObjectContext) -> Void) {
         let context = self.context()
         switch self.concurrencyType {
-        case .mainQueue_sync:
+        case .mainSync:
             context.performAndWait { closure(context) }
-        case .mainQueue_async, .privateQueue_async:
+        case .mainAsync, .private:
             context.perform { closure(context) }
         }
     }
     
     public func concurrencyTypeRefresh() -> Self {
-        self.concurrencyType = .mainQueue_sync
+        self.concurrencyType = .mainSync
         return self
     }
     
 }
 
 extension CoreDataConcurrencyType {
+    
+    /// concurrencyType, default is mainSync
     @discardableResult
     public func concurrencyType(_ concurrencyType: ConcurrencyType) -> Self {
         self.concurrencyType = concurrencyType

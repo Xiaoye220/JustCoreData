@@ -20,15 +20,19 @@ public class CoreDataStack {
     
     
     public lazy var managedObjectModel: NSManagedObjectModel = {
-        guard let dataModelName = CoreDataStack.dataModelName else { fatalError("CoreDataStack.dataModelName cann't be nil") }
+        guard let dataModelName = CoreDataStack.dataModelName else {
+            fatalError("CoreDataStack.dataModelName cann't be nil")
+        }
         let modelURL = Bundle.main.url(forResource: dataModelName, withExtension: "momd")!
         return NSManagedObjectModel(contentsOf: modelURL)!
     }()
     
     public lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
-        guard let dataModelName = CoreDataStack.dataModelName else { fatalError("CoreDataStack.dataModelName cann't be nil") }
+        guard let dataModelName = CoreDataStack.dataModelName else {
+            fatalError("CoreDataStack.dataModelName cann't be nil")
+        }
         
-        var coordinator = NSPersistentStoreCoordinator.init(managedObjectModel: self.managedObjectModel)
+        var coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         
         let url = self.applicationDocumentsDirectory.appendingPathComponent(dataModelName + ".sqlite")
         print("\(url!.path)")
@@ -53,7 +57,7 @@ public class CoreDataStack {
     public lazy var mainManagedObjectContext: NSManagedObjectContext = {
         let coordinator = self.persistentStoreCoordinator
         
-        var managedObjectContext = NSManagedObjectContext.init(concurrencyType: .mainQueueConcurrencyType)
+        var managedObjectContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         managedObjectContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
 
@@ -64,7 +68,7 @@ public class CoreDataStack {
     public lazy var privateManagedObjectContext: NSManagedObjectContext = {
         let coordinator = self.persistentStoreCoordinator
         
-        var managedObjectContext = NSManagedObjectContext.init(concurrencyType: .privateQueueConcurrencyType)
+        var managedObjectContext = NSManagedObjectContext(concurrencyType: .privateQueueConcurrencyType)
         
         managedObjectContext.performAndWait() {
             

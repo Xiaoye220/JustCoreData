@@ -38,7 +38,7 @@ public protocol CoreDataType: CoreDataConcurrencyType, CoreDataFetchRequestType 
     func update() -> Self
     
     @discardableResult
-    func read() -> Self
+    func fetch() -> Self
     
     
     /// Initialize all attributes
@@ -72,30 +72,37 @@ extension CoreDataType {
 
 extension CoreDataType {
     
+    /// The number of data needed to save, default is 1
     @discardableResult
     public func saveDataCount(_ saveDataCount: Int) -> Self {
         self.saveDataCount = saveDataCount
         return self
     }
     
+    /// The number of data should be saved each time, defaut is Int.max
+    /// The larger the value, the greater the memory and CPU consumed, but it's more efficient
     @discardableResult
     public func saveBatchSize(_ saveBatchSize: Int) -> Self {
         self.saveBatchSize = saveBatchSize
         return self
     }
     
+    /// Configure the NSManageObject. It is necessary when saving and updating
     @discardableResult
     public func configure(_ configure: ((_ index: Int, _ entity: ManagedObject) -> Void)?) -> Self {
         self.configure = configure
         return self
     }
     
+    /// Resultes will be nil when saving, updating and deleting
+    /// Resultes are the result of reading
     @discardableResult
     public func completion(_  completion: ((_ success: Bool, _ resultes: [Any]?) -> Void)?) -> Self {
         self.completion = completion
         return self
     }
     
+    /// Entity objects that need deal directly
     @discardableResult
     public func entities(_ entities: [ManagedObject]) -> Self {
         self.entities = entities
