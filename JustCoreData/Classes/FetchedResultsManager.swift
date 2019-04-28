@@ -31,12 +31,12 @@ private enum FetchedResultsChange<E: NSManagedObject> {
     case sectionDelete(Int)
 }
 
-public enum ContextType {
-    case mainContext
-    case privateContext
+public enum ManagedObjectContextType {
+    case main
+    case `private`
 }
 
-public class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>:NSObject, NSFetchedResultsControllerDelegate, DataProvider {
+public class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>: NSObject, NSFetchedResultsControllerDelegate, DataProvider {
     
     fileprivate let fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>
     fileprivate var updates: [FetchedResultsChange<E>] = []
@@ -51,7 +51,11 @@ public class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>:NSObj
     ///   - tableView: tableView
     ///   - sectionName: keypath on resulting objects that returns the section name. This will be used to pre-compute the section information.
     ///   - cacheName: Section info is cached persistently to a private file under this name. Cached sections are checked to see if the time stamp matches the store, but not if you have illegally mutated the readonly fetch request, predicate, or sort descriptor.
-    public init(contextType: ContextType, tableView: UITableView, sectionName: String?, cacheName: String?, fetchRequestConfigure: ((NSFetchRequest<NSFetchRequestResult>) -> Void)?) {
+    public init(contextType: ManagedObjectContextType,
+                tableView: UITableView,
+                sectionName: String?,
+                cacheName: String?,
+                fetchRequestConfigure: ((NSFetchRequest<NSFetchRequestResult>) -> Void)?) {
         
         let fetchRequest = E.sortedFetchRequest
         fetchRequest.returnsObjectsAsFaults = false
@@ -59,13 +63,16 @@ public class FetchedResultsManager<E: NSManagedObject & ManagedObjectType>:NSObj
         
         var context: NSManagedObjectContext
         switch contextType {
-        case .mainContext:
+        case .main:
             context = CoreDataStack.shared.mainManagedObjectContext
-        case .privateContext:
+        case .private:
             context = CoreDataStack.shared.privateManagedObjectContext
         }
 
-        fetchedResultsController = NSFetchedResultsController.init(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: sectionName, cacheName: cacheName)
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                              managedObjectContext: context,
+                                                              sectionNameKeyPath: sectionName,
+                                                              cacheName: cacheName)
         self.tableView = tableView
         super.init()
         fetchedResultsController.delegate = self

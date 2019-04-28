@@ -42,7 +42,7 @@ extension Father: ManagedObjectType {
 
 ### 3.Usage
 
-#### (1)DataSource
+#### 3.1 DataSource
 
 自定义 dict 用来存储需要进行操作的数据。
 >dicts are the data that should to be saved
@@ -64,20 +64,19 @@ var dicts: [[String: Any]] {
         return dicts
     }
 ```
-#### (2)Init
+#### 3.2 Init
+
+dataModelName is the name of .xcdatamodeld file
 
 ```Swift
 let cd = CoreData<Father>()
 
 CoreDataStack.dataModelName = "Person"
 ```
-dataModelName是 .xcdatamodeld 文件的名字
->dataModelName is the name of .xcdatamodeld file
 
-
-#### (3)Save
+#### 3.3 Save
 ```swift
-cd.concurrencyType(.mainQueue_sync)
+cd.concurrencyType(.mainSync)
     .saveDataCount(10)
     .configure { (index, person) in
         person.updateFromDictionary(dict: self.dicts[index])
@@ -87,24 +86,30 @@ cd.concurrencyType(.mainQueue_sync)
     }
     .save()
 ```
-上面 ``person.updateFromDictionary(dict: self.dicts[index])`` 可以根据字典给实体初始化，实体包含关系的话，也可以实现其中的关系。当然也可以通过自己的方式给实体赋值。
-> ``person.updateFromDictionary(dict: self.dicts[index])`` can update entity with dictionary.If there are relationships between entities,the relationships can also be implemented.Of course, you can update entity by your own way.
 
-#### (4)Delete
+`person.updateFromDictionary(dict: self.dicts[index])` can update entity with dictionary. If there are relationships between entities, the relationships can also be implemented .Of course, you can update entity by your own way.
+
+#### 3.4 Fetch
+
 ```swift
-cd.concurrencyType(.mainQueue_sync)
-    .fetchRequest { _ in }
-    .completion { (success, _) in
-        print("\(Thread.current)\nsync delete \(success ? "success" : "fail")")
+cd.concurrencyType(.mainSync)
+    .fetchRequest { request in
+        request.predicate(NSPredicate(format: "name = %@", "Li lei"))
+        	.fetchLimit(1)
+        	.resultType(.managedObjectResultType)
+        // ......
     }
-    .delete()
+    .completion { (success, results) in
+        print("\(Thread.current)\nsync find \(success ? "success" : "fail")")
+        let persons = results as! [Father]
+        print("result count: \(persons.count)")
+    }
+    .fetch()
 ```
-fetchRequest 用于选择需要删除的实体
->fetchRequest use to fetch entities that need to be deleted
 
-#### (5)Update
+#### 3.5 Update
 ```swift
-cd.concurrencyType(.mainQueue_sync)
+cd.concurrencyType(.mainSync)
     .fetchRequest { request in
         request.predicate(NSPredicate(format: "name = %@", "1.Li lei"))
     }
@@ -114,32 +119,21 @@ cd.concurrencyType(.mainQueue_sync)
     .completion { (success, _) in
         print("\(Thread.current)\nsync update \(success ? "success" : "fail")")
     }
-
 ```
 
-#### (6)Read
-
+#### 3.6 Delete
 ```swift
-cd.concurrencyType(.mainQueue_sync)
-    .fetchRequest { request in
-        request.predicate(NSPredicate(format: "name = %@", "Li lei"))
-        .fetchLimit(1)
-        .resultType(.managedObjectResultType)
-        ......
+cd.concurrencyType(.mainSync)
+    .fetchRequest { _ in }
+    .completion { (success, _) in
+        print("\(Thread.current)\nsync delete \(success ? "success" : "fail")")
     }
-    .completion { (success, results) in
-        print("\(Thread.current)\nsync find \(success ? "success" : "fail")")
-        let persons = results as! [Father]
-        print("result count: \(persons.count)")
-    }
-    .read()
+    .delete()
 ```
-
 
 ### 4.NSFetchedResultsController
 
-除了以上功能，对 NSFetchedResultsController 也做了一些封装
->some NSFetchedResultsController extensions. Operating database will update tableview directly.
+`FetchedResultsManager` encapsulates the `NSFetchedResultsController` logic to make `NSFetchedResultsController` easy to use
 
 #### Usage
 ``` Swift 
@@ -151,7 +145,11 @@ class NSFetchedResultsViewController: UITableViewController {
         super.viewDidLoad()
 
         // init FetchedResultsManager
-        fetchedResultsManager = FetchedResultsManager<Father>(contextType: .privateContext, tableView: tableView, sectionName: nil, cacheName: nil, fetchRequestConfigure: nil)
+        fetchedResultsManager = FetchedResultsManager<Father>(contextType: .private,
+                                                              tableView: tableView,
+                                                              sectionName: nil,
+                                                              cacheName: nil,
+                                                              fetchRequestConfigure: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -160,7 +158,6 @@ class NSFetchedResultsViewController: UITableViewController {
     }
 
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return fetchedResultsManager.numberOfSections()
     }

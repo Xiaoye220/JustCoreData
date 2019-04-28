@@ -17,7 +17,11 @@ class NSFetchedResultsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        fetchedResultsManager = FetchedResultsManager<Father>(contextType: .privateContext, tableView: tableView, sectionName: nil, cacheName: nil, fetchRequestConfigure: nil)
+        fetchedResultsManager = FetchedResultsManager<Father>(contextType: .private,
+                                                              tableView: tableView,
+                                                              sectionName: nil,
+                                                              cacheName: nil,
+                                                              fetchRequestConfigure: nil)
     }
 
     override func didReceiveMemoryWarning() {
